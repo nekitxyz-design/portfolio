@@ -2,6 +2,7 @@ import React from "react";
 import { Badge } from "../../../../components/ui/badge";
 import { Button } from "../../../../components/ui/button";
 import { Card, CardContent } from "../../../../components/ui/card";
+import { Link } from "react-router-dom";
 
 // Project data for mapping
 const projects = [
@@ -153,19 +154,38 @@ export const ProjectGallerySection = (): JSX.Element => {
                 </div>
               </div>
 
-              <Button
-                variant="outline"
-                className="w-[281px] h-[54px] flex items-center justify-center gap-4 px-3.5 py-4 border border-solid border-[#0f0f0f] rounded-none"
-              >
-                <span className="[font-family:'Inter',Helvetica] font-bold text-x-101010 text-sm tracking-[-0.70px] leading-[15.4px]">
-                  Open Showcase
-                </span>
-                <img
-                  className="w-6 h-[23.53px]"
-                  alt="Envelope fill"
-                  src="/envelope-fill-2-1.svg"
-                />
-              </Button>
+              {/* Кнопка только для первой карточки (HRTech Platform) */}
+              {project.id === 1 ? (
+                <Link to="/krewguru" style={{ width: "281px" }}>
+                  <Button
+                    variant="outline"
+                    className="w-full h-[54px] flex items-center justify-center gap-4 px-3.5 py-4 border border-solid border-[#0f0f0f] rounded-none"
+                  >
+                    <span className="[font-family:'Inter',Helvetica] font-bold text-x-101010 text-sm tracking-[-0.70px] leading-[15.4px]">
+                      Open Showcase
+                    </span>
+                    <img
+                      className="w-6 h-[23.53px]"
+                      alt="Envelope fill"
+                      src="/envelope-fill-2-1.svg"
+                    />
+                  </Button>
+                </Link>
+              ) : (
+                <Button
+                  variant="outline"
+                  className="w-[281px] h-[54px] flex items-center justify-center gap-4 px-3.5 py-4 border border-solid border-[#0f0f0f] rounded-none"
+                >
+                  <span className="[font-family:'Inter',Helvetica] font-bold text-x-101010 text-sm tracking-[-0.70px] leading-[15.4px]">
+                    Open Showcase
+                  </span>
+                  <img
+                    className="w-6 h-[23.53px]"
+                    alt="Envelope fill"
+                    src="/envelope-fill-2-1.svg"
+                  />
+                </Button>
+              )}
             </CardContent>
           </Card>
         ))}
