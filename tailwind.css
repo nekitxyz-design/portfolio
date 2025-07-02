@@ -1,0 +1,146 @@
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .all-\[unset\] {
+    all: unset;
+  }
+}
+
+:root {
+  --app-background: rgba(255, 255, 255, 1);
+  --body-font-family: "Inter", Helvetica;
+  --body-font-size: 16px;
+  --body-font-style: normal;
+  --body-font-weight: 400;
+  --body-letter-spacing: 0px;
+  --body-line-height: 140%;
+  --divider: rgba(0, 0, 0, 1);
+  --header-2-font-family: "Inter", Helvetica;
+  --header-2-font-size: 48px;
+  --header-2-font-style: normal;
+  --header-2-font-weight: 700;
+  --header-2-letter-spacing: -0.96px;
+  --header-2-line-height: 100%;
+  --header-header-1-font-family: "Playfair Display", Helvetica;
+  --header-header-1-font-size: 64px;
+  --header-header-1-font-style: normal;
+  --header-header-1-font-weight: 700;
+  --header-header-1-letter-spacing: -3.2px;
+  --header-header-1-line-height: 110%;
+  --header-header-3-font-family: "Playfair Display", Helvetica;
+  --header-header-3-font-size: 30px;
+  --header-header-3-font-style: normal;
+  --header-header-3-font-weight: 400;
+  --header-header-3-letter-spacing: -0.6px;
+  --header-header-3-line-height: 100%;
+  --header-header-4-font-family: "Playfair Display", Helvetica;
+  --header-header-4-font-size: 24px;
+  --header-header-4-font-style: normal;
+  --header-header-4-font-weight: 400;
+  --header-header-4-letter-spacing: -1.2000000000000002px;
+  --header-header-4-line-height: 100%;
+  --header-header-5-font-family: "Playfair Display", Helvetica;
+  --header-header-5-font-size: 16px;
+  --header-header-5-font-style: normal;
+  --header-header-5-font-weight: 600;
+  --header-header-5-letter-spacing: 0px;
+  --header-header-5-line-height: 140%;
+  --paragraph-1: rgba(0, 0, 0, 1);
+  --paragraph-2: rgba(195, 195, 195, 1);
+  --paragraph-2-font-family: "Lato", Helvetica;
+  --paragraph-2-font-size: 16px;
+  --paragraph-2-font-style: normal;
+  --paragraph-2-font-weight: 400;
+  --paragraph-2-letter-spacing: -0.48px;
+  --paragraph-2-line-height: 110%;
+  --text-link-font-family: "Lato", Helvetica;
+  --text-link-font-size: MIXEDpx;
+  --text-link-font-style: normal;
+  --text-link-font-weight: 500;
+  --text-link-line-height: 110%;
+  --x-101010: rgba(16, 16, 16, 1);
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 47.4% 11.2%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+
+    --card: transparent;
+    --card-foreground: 222.2 47.4% 11.2%;
+
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 100% 50%;
+    --destructive-foreground: 210 40% 98%;
+
+    --ring: 215 20.2% 65.1%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 224 71% 4%;
+    --foreground: 213 31% 91%;
+
+    --muted: 223 47% 11%;
+    --muted-foreground: 215.4 16.3% 56.9%;
+
+    --accent: 216 34% 17%;
+    --accent-foreground: 210 40% 98%;
+
+    --popover: 224 71% 4%;
+    --popover-foreground: 215 20.2% 65.1%;
+
+    --border: 216 34% 17%;
+    --input: 216 34% 17%;
+
+    --card: transparent;
+    --card-foreground: 213 31% 91%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 1.2%;
+
+    --secondary: 222.2 47.4% 11.2%;
+    --secondary-foreground: 210 40% 98%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+
+    --ring: 216 34% 17%;
+
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
