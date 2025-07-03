@@ -75,40 +75,37 @@ export const AboutMeSection = (): JSX.Element => {
   ];
 
   return (
-    <section className="flex w-full items-start gap-12 px-16 py-[120px] bg-[#ffffffb2] backdrop-blur-2xl backdrop-brightness-[100%] [-webkit-backdrop-filter:blur(40px)_brightness(100%)]">
-      <div className="flex max-w-[1600px] items-start justify-center gap-12 relative flex-1 grow mx-auto">
-        <div className="flex items-start gap-4 relative flex-1 self-stretch grow">
-          <h2 className="relative flex-1 mt-[-1.00px] [font-family:'Inter',Helvetica] font-bold text-black text-5xl tracking-[-0.96px] leading-[57.6px]">
-            Also, a bit about me
-          </h2>
-        </div>
-
-        <div className="flex flex-col items-start gap-4 relative flex-1 grow">
-          {aboutMeCards.map((card, index) => (
-            <Card
-              key={index}
-              className="min-w-[324px] w-full bg-[#0000000d] rounded"
+    <section className="w-full flex flex-col md:flex-row items-start gap-6 md:gap-12 px-4 md:px-16 py-[60px] md:py-[120px] bg-[#ffffffb2] backdrop-blur-2xl backdrop-brightness-[100%] [-webkit-backdrop-filter:blur(40px)_brightness(100%)]">
+      <div className="w-full md:w-auto flex flex-col items-start md:items-start md:justify-center md:gap-4">
+        <h2 className="relative mt-[-1.00px] [font-family:'Inter',Helvetica] font-bold text-black text-[36px] md:text-5xl tracking-[-0.96px] leading-[40px] md:leading-[57.6px]">
+          Also, a bit about me
+        </h2>
+      </div>
+      <div className="w-full flex flex-col items-stretch gap-4">
+        {aboutMeCards.map((card, index) => (
+          <Card
+            key={index}
+            className="w-full bg-[#0000000d] rounded"
+          >
+            <CardContent
+              className={`flex flex-col items-start gap-4 ${card.padding}`}
             >
-              <CardContent
-                className={`flex flex-col items-start gap-4 ${card.padding}`}
-              >
-                <div className="inline-flex items-center justify-center gap-3">
-                  <img
-                    src={card.icon}
-                    alt=""
-                    className={`${card.iconWidth} ${card.iconHeight} object-contain`}
-                  />
-                  <div className="relative w-fit mt-[-1.00px] [font-family:'Inter',Helvetica] font-normal text-black text-2xl tracking-[-0.36px] leading-6 whitespace-nowrap">
-                    {card.title}
-                  </div>
+              <div className="inline-flex items-center justify-center gap-3">
+                <img
+                  src={card.icon}
+                  alt=""
+                  className={`${card.iconWidth} ${card.iconHeight} object-contain`}
+                />
+                <div className="relative w-fit mt-[-1.00px] [font-family:'Inter',Helvetica] font-normal text-black text-2xl tracking-[-0.36px] leading-6">
+                  {card.title}
                 </div>
-                <div className="relative self-stretch [font-family:'Inter',Helvetica] font-medium text-[#00000099] text-lg tracking-[-0.09px] leading-[26.1px]">
-                  {card.description}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+              </div>
+              <div className="relative self-stretch [font-family:'Inter',Helvetica] font-medium text-[#00000099] text-lg tracking-[-0.09px] leading-[26.1px]">
+                {card.description}
+              </div>
+            </CardContent>
+          </Card>
+        ))}
       </div>
     </section>
   );

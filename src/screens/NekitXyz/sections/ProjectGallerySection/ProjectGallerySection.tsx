@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { Badge } from "../../../../components/ui/badge";
 import { Button } from "../../../../components/ui/button";
 import { Card, CardContent } from "../../../../components/ui/card";
@@ -49,9 +49,93 @@ const projects = [
   },
 ];
 
+// AutoScrollingImageRow компонент
+const AutoScrollingImageRow = ({ images }: { images: { url: string, alt: string }[] }) => {
+  // Дублируем картинки до 4
+  const imgs = images.length >= 4 ? images.slice(0, 4) : [...images, ...Array(4 - images.length).fill(images[images.length - 1])];
+  // Для loop — удваиваем массив
+  const loopImgs = [...imgs, ...imgs];
+  const rowRef = useRef<HTMLDivElement>(null);
+  const [dragStart, setDragStart] = useState<number | null>(null);
+  const [scrollLeft, setScrollLeft] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+
+  // Автоскролл
+  useEffect(() => {
+    if (isDragging) return;
+    const row = rowRef.current;
+    if (!row) return;
+    let frame: number;
+    let last = Date.now();
+    const animate = () => {
+      const now = Date.now();
+      const dt = now - last;
+      last = now;
+      row.scrollLeft += dt * 0.04; // скорость
+      // loop
+      if (row.scrollLeft >= row.scrollWidth / 2) {
+        row.scrollLeft = 0;
+      }
+      frame = requestAnimationFrame(animate);
+    };
+    frame = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(frame);
+  }, [isDragging]);
+
+  // Drag
+  const onDragStart = (e: React.MouseEvent | React.TouchEvent) => {
+    setIsDragging(true);
+    setDragStart('touches' in e ? e.touches[0].clientX : e.clientX);
+    setScrollLeft(rowRef.current?.scrollLeft || 0);
+  };
+  const onDragMove = (e: React.MouseEvent | React.TouchEvent) => {
+    if (!isDragging || dragStart === null) return;
+    const x = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    const dx = dragStart - x;
+    if (rowRef.current) {
+      rowRef.current.scrollLeft = scrollLeft + dx;
+      // loop
+      if (rowRef.current.scrollLeft >= rowRef.current.scrollWidth / 2) {
+        rowRef.current.scrollLeft = 0;
+      }
+      if (rowRef.current.scrollLeft < 0) {
+        rowRef.current.scrollLeft = rowRef.current.scrollWidth / 2;
+      }
+    }
+  };
+  const onDragEnd = () => {
+    setIsDragging(false);
+    setDragStart(null);
+  };
+
+  return (
+    <div
+      ref={rowRef}
+      className="flex items-center gap-4 px-4 py-0 w-full overflow-x-hidden cursor-grab select-none"
+      style={{ touchAction: 'pan-x' }}
+      onMouseDown={onDragStart}
+      onMouseMove={onDragMove}
+      onMouseUp={onDragEnd}
+      onMouseLeave={onDragEnd}
+      onTouchStart={onDragStart}
+      onTouchMove={onDragMove}
+      onTouchEnd={onDragEnd}
+    >
+      {loopImgs.map((image, idx) => (
+        <img
+          key={idx}
+          className="object-cover rounded w-[243px] h-[243px] min-w-[243px] min-h-[243px] max-w-[243px] max-h-[243px] md:w-[480px] md:h-[480px] md:min-w-[480px] md:min-h-[480px] md:max-w-[480px] md:max-h-[480px] flex-shrink-0"
+          src={image.url}
+          alt={image.alt}
+        />
+      ))}
+    </div>
+  );
+};
+
 export const ProjectGallerySection = (): JSX.Element => {
   return (
-    <section className="w-full py-12 px-4 bg-[#ffffffcc] backdrop-blur-2xl">
+    <section className="w-full py-12 px-4 bg-white/70 backdrop-blur-2xl">
       <div className="max-w-[1600px] mx-auto flex flex-col items-center gap-12">
         {/* Section Header */}
         <div className="flex flex-col items-start gap-4 w-full">
@@ -63,7 +147,7 @@ export const ProjectGallerySection = (): JSX.Element => {
             />
           </div>
 
-          <h2 className="font-header-2 font-[number:var(--header-2-font-weight)] text-paragraph-1 text-[length:var(--header-2-font-size)] tracking-[var(--header-2-letter-spacing)] leading-[var(--header-2-line-height)] [font-style:var(--header-2-font-style)]">
+          <h2 className="font-header-2 font-[number:var(--header-2-font-weight)] text-paragraph-1 text-[36px] md:text-[48px] tracking-[var(--header-2-letter-spacing)] leading-[40px] md:leading-[var(--header-2-line-height)] [font-style:var(--header-2-font-style)]">
             Featured Showcases
           </h2>
 
@@ -88,16 +172,8 @@ export const ProjectGallerySection = (): JSX.Element => {
                 src={project.logo}
               />
 
-              <div className="flex items-center gap-4 px-4 py-0 w-full overflow-hidden">
-                {project.images.map((image, index) => (
-                  <img
-                    key={index}
-                    className={`w-[461.25px] h-[446px] object-cover ${index === 2 ? "mr-[-16.00px]" : ""}`}
-                    src={image.url}
-                    alt={image.alt}
-                  />
-                ))}
-              </div>
+              {/* Новый компонент с автоскроллом */}
+              <AutoScrollingImageRow images={[...project.images, project.images[2] || project.images[project.images.length-1]]} />
             </div>
 
             <CardContent className="flex flex-col items-start gap-6 pl-6 pr-0 py-8">
@@ -159,7 +235,7 @@ export const ProjectGallerySection = (): JSX.Element => {
                 <Link to="/krewguru" style={{ width: "281px" }}>
                   <Button
                     variant="outline"
-                    className="w-full h-[54px] flex items-center justify-center gap-4 px-3.5 py-4 border border-solid border-[#0f0f0f] rounded-none"
+                    className="whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-transparent shadow-sm hover:bg-accent hover:text-accent-foreground h-[54px] flex items-center justify-center gap-4 px-3.5 py-4 border border-solid border-[#0f0f0f] rounded-none"
                   >
                     <span className="[font-family:'Inter',Helvetica] font-bold text-x-101010 text-sm tracking-[-0.70px] leading-[15.4px]">
                       Open Showcase
@@ -174,7 +250,7 @@ export const ProjectGallerySection = (): JSX.Element => {
               ) : (
                 <Button
                   variant="outline"
-                  className="w-[281px] h-[54px] flex items-center justify-center gap-4 px-3.5 py-4 border border-solid border-[#0f0f0f] rounded-none"
+                  className="whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-transparent shadow-sm hover:bg-accent hover:text-accent-foreground h-[54px] flex items-center justify-center gap-4 px-3.5 py-4 border border-solid border-[#0f0f0f] rounded-none"
                 >
                   <span className="[font-family:'Inter',Helvetica] font-bold text-x-101010 text-sm tracking-[-0.70px] leading-[15.4px]">
                     Open Showcase

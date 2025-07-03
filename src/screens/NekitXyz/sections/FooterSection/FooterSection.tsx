@@ -12,7 +12,7 @@ export const FooterSection = (): JSX.Element => {
           />
 
           <div className="flex items-center gap-2 self-stretch w-full">
-            <h2 className="relative w-fit mt-[-1.00px] font-sans font-normal text-black text-2xl tracking-[-0.48px] leading-[34.8px] whitespace-nowrap">
+            <h2 className="relative w-fit mt-[-1.00px] font-sans font-normal text-black text-[36px] md:text-2xl tracking-[-0.48px] leading-[40px] md:leading-[34.8px] whitespace-nowrap">
               Nick Polkovnikov | nekit.xyz
             </h2>
           </div>

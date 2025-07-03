@@ -35,7 +35,7 @@ export const EndSubsection = (): JSX.Element => {
       </div>
 
       <div className="flex flex-col items-center gap-4 max-w-[1232px] w-full">
-        <h2 className="self-stretch font-header-2 text-paragraph-1 text-[length:var(--header-2-font-size)] text-center tracking-[var(--header-2-letter-spacing)] leading-[var(--header-2-line-height)] [font-style:var(--header-2-font-style)]">
+        <h2 className="self-stretch font-header-2 text-paragraph-1 text-[36px] md:text-[48px] text-center tracking-[var(--header-2-letter-spacing)] leading-[40px] md:leading-[var(--header-2-line-height)] [font-style:var(--header-2-font-style)]">
           Thanks for the visit.
           <br />
           Reach out and let&apos;s chat.

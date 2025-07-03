@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { Badge } from "../../../../components/ui/badge";
 import { Card, CardContent, CardTitle } from "../../../../components/ui/card";
 
@@ -74,12 +74,90 @@ const projects = [
   },
 ];
 
+// AutoScrollingImageRow компонент
+const AutoScrollingImageRow = ({ images }: { images: { url: string, alt: string }[] }) => {
+  const imgs = images.length >= 4 ? images.slice(0, 4) : [...images, ...Array(4 - images.length).fill(images[images.length - 1])];
+  const loopImgs = [...imgs, ...imgs];
+  const rowRef = useRef<HTMLDivElement>(null);
+  const [dragStart, setDragStart] = useState<number | null>(null);
+  const [scrollLeft, setScrollLeft] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+
+  useEffect(() => {
+    if (isDragging) return;
+    const row = rowRef.current;
+    if (!row) return;
+    let frame: number;
+    let last = Date.now();
+    const animate = () => {
+      const now = Date.now();
+      const dt = now - last;
+      last = now;
+      row.scrollLeft += dt * 0.04;
+      if (row.scrollLeft >= row.scrollWidth / 2) {
+        row.scrollLeft = 0;
+      }
+      frame = requestAnimationFrame(animate);
+    };
+    frame = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(frame);
+  }, [isDragging]);
+
+  const onDragStart = (e: React.MouseEvent | React.TouchEvent) => {
+    setIsDragging(true);
+    setDragStart('touches' in e ? e.touches[0].clientX : e.clientX);
+    setScrollLeft(rowRef.current?.scrollLeft || 0);
+  };
+  const onDragMove = (e: React.MouseEvent | React.TouchEvent) => {
+    if (!isDragging || dragStart === null) return;
+    const x = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    const dx = dragStart - x;
+    if (rowRef.current) {
+      rowRef.current.scrollLeft = scrollLeft + dx;
+      if (rowRef.current.scrollLeft >= rowRef.current.scrollWidth / 2) {
+        rowRef.current.scrollLeft = 0;
+      }
+      if (rowRef.current.scrollLeft < 0) {
+        rowRef.current.scrollLeft = rowRef.current.scrollWidth / 2;
+      }
+    }
+  };
+  const onDragEnd = () => {
+    setIsDragging(false);
+    setDragStart(null);
+  };
+
+  return (
+    <div
+      ref={rowRef}
+      className="flex items-center gap-4 px-4 py-0 w-full overflow-x-hidden cursor-grab select-none"
+      style={{ touchAction: 'pan-x' }}
+      onMouseDown={onDragStart}
+      onMouseMove={onDragMove}
+      onMouseUp={onDragEnd}
+      onMouseLeave={onDragEnd}
+      onTouchStart={onDragStart}
+      onTouchMove={onDragMove}
+      onTouchEnd={onDragEnd}
+    >
+      {loopImgs.map((image, idx) => (
+        <img
+          key={idx}
+          className="object-cover rounded w-[243px] h-[243px] min-w-[243px] min-h-[243px] max-w-[243px] max-h-[243px] md:w-[480px] md:h-[480px] md:min-w-[480px] md:min-h-[480px] md:max-w-[480px] md:max-h-[480px] flex-shrink-0"
+          src={image.url}
+          alt={image.alt}
+        />
+      ))}
+    </div>
+  );
+};
+
 export const FeaturedShowcasesSection = (): JSX.Element => {
   return (
     <section className="w-full py-16 px-4 bg-[#f6f5f3e8] backdrop-blur-2xl">
-      <div className="flex flex-col max-w-[1600px] items-start gap-12 py-6 px-6 mx-auto">
-        <header className="w-full flex flex-col items-start gap-4">
-          <h2 className="[font-family:'Inter',Helvetica] font-bold text-black text-5xl tracking-[-0.96px] leading-[57.6px]">
+      <div className="flex flex-col w-full md:max-w-[1600px] items-start gap-12 py-6 px-4 md:px-6 md:mx-auto">
+        <header className="w-full flex flex-col items-start gap-4 px-0">
+          <h2 className="[font-family:'Inter',Helvetica] font-bold text-black text-[36px] md:text-5xl tracking-[-0.96px] leading-[40px] md:leading-[57.6px]">
             Project Gallery
           </h2>
           <p className="[font-family:'Inter',Helvetica] font-medium text-[#00000099] text-lg tracking-[-0.09px] leading-[26.1px]">
@@ -90,11 +168,11 @@ export const FeaturedShowcasesSection = (): JSX.Element => {
         {projects.map((project, index) => (
           <Card
             key={index}
-            className={`w-full ${project.bgColor} backdrop-blur-[5px] overflow-hidden`}
+            className={`w-full ${project.bgColor} backdrop-blur-[5px] overflow-hidden px-0`}
           >
             <CardContent className="p-0">
-              <div className="flex flex-col items-start gap-6 pt-8 pb-[25px] px-6">
-                <div className="flex h-[42px] items-center justify-between w-full">
+              <div className="flex flex-col items-start gap-6 pt-8 pb-[25px] px-0 w-full">
+                <div className="flex h-[42px] items-center justify-between w-full px-4">
                   <CardTitle className="flex-1 [font-family:'Inter',Helvetica] font-semibold text-paragraph-1 text-[32px] tracking-[-0.64px] leading-8">
                     {project.title}
                   </CardTitle>
@@ -105,16 +183,8 @@ export const FeaturedShowcasesSection = (): JSX.Element => {
                   />
                 </div>
 
-                <div className="flex items-center gap-5 px-4 py-0 w-full overflow-hidden">
-                  {project.images.map((image, imgIndex) => (
-                    <img
-                      key={imgIndex}
-                      className={`w-[461.25px] h-[446px] object-cover ${imgIndex === 2 ? "mr-[-16.00px]" : ""}`}
-                      src={image.url}
-                      alt={image.alt}
-                    />
-                  ))}
-                </div>
+                {/* Новый компонент с автоскроллом */}
+                <AutoScrollingImageRow images={[...project.images, project.images[2] || project.images[project.images.length-1]]} />
 
                 <div className="flex flex-wrap items-start gap-[24px_30px] px-6 py-0 w-full">
                   <div className="flex items-start gap-[30px] flex-1 grow">
